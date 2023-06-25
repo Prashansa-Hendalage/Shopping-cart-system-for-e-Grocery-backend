@@ -5,6 +5,7 @@ import com.example.prashansa.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,5 +29,19 @@ public class ProductService {
 
     public void deleteProductDetails(Integer productId){
         productDao.deleteById(productId);
+    }
+
+    public List<Product> getProductDetails(boolean isSingleProductCheckout,Integer productId){
+        if(isSingleProductCheckout){
+            //we are going to buy a single product
+            List<Product> list = new ArrayList<>();
+            Product product = productDao.findById(productId).get();
+            list.add(product);
+            return list;
+        }
+        else{
+            //we are going to checkout entire cart
+        }
+        return new  ArrayList<>();
     }
 }
