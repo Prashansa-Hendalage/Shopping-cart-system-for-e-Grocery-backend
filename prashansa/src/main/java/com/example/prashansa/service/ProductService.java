@@ -1,7 +1,12 @@
 package com.example.prashansa.service;
 
+import com.example.prashansa.configuration.JwtRequestFilter;
+import com.example.prashansa.dao.CartDao;
 import com.example.prashansa.dao.ProductDao;
+import com.example.prashansa.dao.UserDao;
+import com.example.prashansa.entity.Cart;
 import com.example.prashansa.entity.Product;
+import com.example.prashansa.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -9,12 +14,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
 
     @Autowired
     private ProductDao productDao;
+
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private CartDao cartDao;
 
     public Product addNewProduct(Product product){
        return productDao.save(product);
@@ -41,17 +53,22 @@ public class ProductService {
         productDao.deleteById(productId);
     }
 
+
     public List<Product> getProductDetails(boolean isSingleProductCheckout,Integer productId){
-        if(isSingleProductCheckout){
-            //we are going to buy a single product
+        if(isSingleProductCheckout && productId !=0){
+            // buy a single product
             List<Product> list = new ArrayList<>();
             Product product = productDao.findById(productId).get();
             list.add(product);
             return list;
         }
         else{
-            //we are going to checkout entire cart
+            // checkout entire cart
+           String username = JwtRequestFilter.CURRENT_USER;
+           User user = userDao.findById(username).get();
+           List<Cart> carts = cartDao.findByUser(user);
+
+           return carts.stream().map(x -> x.getProduct()).collect(Collectors.toList());
         }
-        return new  ArrayList<>();
     }
 }

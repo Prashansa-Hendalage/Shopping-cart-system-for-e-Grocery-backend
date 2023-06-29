@@ -1,6 +1,7 @@
 package com.example.prashansa.service;
 
 import com.example.prashansa.configuration.JwtRequestFilter;
+import com.example.prashansa.dao.CartDao;
 import com.example.prashansa.dao.OrderDetailDao;
 import com.example.prashansa.dao.ProductDao;
 import com.example.prashansa.dao.UserDao;
@@ -24,7 +25,10 @@ public class OrderDetailService {
     @Autowired
     private UserDao userDao;
 
-    public void placeOrder(OrderInput orderInput){
+    @Autowired
+    private CartDao cartDao;
+
+    public void placeOrder(OrderInput orderInput,boolean isSingleProductCheckout){
         List<OrderProductQuantity> productQuantityList = orderInput.getOrderProductQuantityList();
 
         for (OrderProductQuantity o: productQuantityList){
@@ -43,6 +47,12 @@ public class OrderDetailService {
                     product,
                     user
             );
+
+            // empty the cart
+            if (!isSingleProductCheckout){
+                List<Cart> carts = cartDao.findByUser(user);
+                carts.stream().forEach(x -> cartDao.deleteById(x.getCartId()));
+            }
             orderDetailDao.save(orderDetail);
         }
     }
