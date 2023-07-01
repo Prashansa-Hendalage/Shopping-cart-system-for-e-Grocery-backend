@@ -18,6 +18,10 @@ public class OrderDetail {
     @OneToOne
     private User user;
 
+    public OrderDetail(){
+
+    }
+
     public Product getProduct() {
         return product;
     }
