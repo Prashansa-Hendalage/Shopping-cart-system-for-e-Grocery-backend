@@ -1,6 +1,9 @@
 package com.example.prashansa.entity;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 public class OrderDetail {
@@ -18,13 +21,24 @@ public class OrderDetail {
     @OneToOne
     private User user;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date deliveredDateTime;
+
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(columnDefinition = "TIMESTAMP", updatable = false)
+    private Date createDateTime;
+
     public OrderDetail(){
 
     }
+    public  void setDeliveredDateTime(Date deliveredDateTime){
+        this.deliveredDateTime =deliveredDateTime;}
 
     public Product getProduct() {
         return product;
     }
+
 
     public OrderDetail(String orderFullName, String orderAddress, String orderContactNumber, String orderAlternateContactNumber, String orderStatus, Double orderAmount, Product product, User user) {
         this.orderFullName = orderFullName;
@@ -104,4 +118,9 @@ public class OrderDetail {
     public void setOrderAmount(Double orderAmount) {
         this.orderAmount = orderAmount;
     }
+    public Date getCreateDateTime() {
+        return this.createDateTime;
+    }
+    public Date getDeliveredDateTime() {
+        return this.deliveredDateTime;}
 }

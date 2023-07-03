@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -83,7 +84,7 @@ public class OrderDetailService {
         OrderDetail orderDetail = orderDetailDao.findById(orderId).get();
         if (orderDetail != null){
             orderDetail.setOrderStatus("Delivered");
-            orderDetailDao.save(orderDetail);
-        }
+            orderDetail.setDeliveredDateTime(new Date());
+            orderDetailDao.save(orderDetail);}
     }
 }
