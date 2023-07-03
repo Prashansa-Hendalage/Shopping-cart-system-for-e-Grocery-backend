@@ -64,6 +64,7 @@ public class OrderDetailService {
                     orderInput.getFullAddress(),
                     orderInput.getContactNumber(),
                     orderInput.getAlternateContactNumber(),
+
                     ORDER_PLACED,
                     product.getProductDiscountedPrice()*o.getQuantity(),
                     product,
